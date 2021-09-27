@@ -1,0 +1,25 @@
+.modal {
+  width: 300px;
+  height: 5rem;
+  background-color: bisque;
+  font-size: 1.2rem;
+}
+
+.publish {
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.publish input {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  width: 80%;
+  border: 1px solid grey;
+}
+
+.publish button {
+  display: block;
+  margin: auto;
+  margin-top: 10px;
+}
