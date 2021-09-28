@@ -1,5 +1,4 @@
 import { Navbar, Nav, NavDropdown, Container } from "react-bootstrap";
-import "./App.css";
 import { useState } from "react";
 import Data from "./data.js";
 import { Link, Route, Switch } from "react-router-dom";

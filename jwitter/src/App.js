@@ -1,7 +1,17 @@
-import "./App.css";
+import React, { useState } from "react";
+import AppRouter from "components/Router";
+
+import { authService } from "fbase";
 
 function App() {
-  return <div className="App"></div>;
+  console.log(authService.currentUser);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  return (
+    <>
+      <AppRouter isLoggedIn={isLoggedIn} />
+      <footer>&copy; {new Date().getFullYear()} Nwitter </footer>
+    </>
+  );
 }
 
 export default App;
