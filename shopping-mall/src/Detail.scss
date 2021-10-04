@@ -1,0 +1,51 @@
+// @import "./reset.scss";
+
+body {
+  margin: 0;
+}
+
+div {
+  box-sizing: border-box;
+}
+
+$main-color: #ff0000;
+
+.red {
+  color: $main-color;
+}
+
+@mixin mixin_func() {
+  background-color: #eef424;
+  padding: 15px;
+} //mixin함수 쓰는방법. -> include적어주기
+
+.my-alert {
+  background-color: #eee;
+  padding: 20px;
+  border-radius: 5px;
+  max-width: 500px;
+  width: 100%;
+  margin: auto;
+  @include mixin_func();
+}
+.my-alert2 {
+  @extend .my-alert; //my-alert모두 복붙기능 (상속)
+  background-color: #ffa452;
+}
+
+.my-alert p {
+  margin-bottom: 0;
+}
+
+// div.container h4 { //container라는 div
+//   color: blue;
+// }
+//nesting 문법임.
+// div.container {
+//   h4{
+//     color: blue;
+//   }
+//   p {
+//     color: green;
+//   }
+// }
