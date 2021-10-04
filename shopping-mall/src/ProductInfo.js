@@ -3,7 +3,7 @@ import oioi1 from "./oioi1.jpg";
 import oioi2 from "./oioi2.jpg";
 import oioi3 from "./oioi3.jpg";
 
-const imageArray = [oioi1, oioi2, oioi3];
+const imageArray = [oioi1, oioi2, oioi3, oioi1, oioi2, oioi3];
 
 function ProductInfo({ product }) {
   return (

@@ -62,7 +62,18 @@ function Detail(props) {
           <h4 className="pt-5">{foundProduct.title}</h4>
           <p>{foundProduct.content}</p>
           <p>{foundProduct.price}</p>
-          <button className="btn btn-danger">주문하기</button>
+          <StockInfo stock={props.stock} id={id} />
+
+          <button
+            className="btn btn-danger"
+            onClick={() => {
+              console.log(props.stock[id]);
+              props.setStock(Number(props.stock[id] - 1));
+              console.log(props.stock);
+            }}
+          >
+            주문하기
+          </button>
           <button
             onClick={() => {
               history.push("/");
@@ -83,6 +94,10 @@ function Detail(props) {
       </div>
     </div>
   );
+}
+
+function StockInfo(props) {
+  return <p>재고 : {props.stock[props.id]}개</p>;
 }
 
 export default Detail;
