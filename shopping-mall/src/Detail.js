@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import styled from "styled-components";
 import "./Detail.scss";
+import { Nav } from "react-bootstrap";
+import { CSSTransition } from "react-tansition-group";
 
 let Box = styled.div`
   padding: 20px;
@@ -16,6 +18,9 @@ let Title = styled.h4`
 function Detail(props) {
   let [display, setDisplay] = useState(true);
   let [inputData, setInputData] = useState("");
+
+  let [onTab, setOnTab] = useState(0);
+
   //useEffect는 여러개 써도됨. 근데 먼저 쓴거 먼저 실행된다.
   useEffect(() => {
     //2초 후 alert창 안보이게하기
@@ -92,8 +97,43 @@ function Detail(props) {
           </button>
         </div>
       </div>
+
+      <Nav className="mt-5" variant="tabs" defaultActiveKey="/home">
+        <Nav.Item>
+          <Nav.Link
+            eventKey="link-0"
+            onClick={() => {
+              setOnTab(0);
+            }}
+          >
+            Active
+          </Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link
+            eventKey="link-1"
+            onClick={() => {
+              setOnTab(1);
+            }}
+          >
+            Option 2
+          </Nav.Link>
+        </Nav.Item>
+      </Nav>
+      {/* 삼항연산자는 경우의수가 3개이상일때는 유용하지 않음. -> 컴포넌트 하나 만들기. */}
+      <TabContent onTab={onTab} />
     </div>
   );
+}
+
+function TabContent(props) {
+  if (props.onTab === 0) {
+    return <div>0번째 내용임</div>;
+  } else if (props.onTab === 1) {
+    <div>1번째 내용임</div>;
+  } else if (props.onTab === 2) {
+    <div>2번째 내용임</div>;
+  }
 }
 
 function StockInfo(props) {

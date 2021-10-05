@@ -1,10 +1,13 @@
 import { Navbar, Nav, NavDropdown, Container } from "react-bootstrap";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import Data from "./data.js";
 import { Link, Route, Switch } from "react-router-dom";
 import ProductInfo from "./ProductInfo";
 import Detail from "./Detail.js";
 import axios from "axios";
+import React from "react";
+
+export let stockContext = React.createContext();
 
 function App() {
   let [product, setProduct] = useState(Data);
@@ -56,14 +59,17 @@ function App() {
           </div>
           <div className="product-list">
             <div className="container">
-              <div className="row product">
-                <ProductInfo
-                  product={product}
-                  stock={stock}
-                  setStock={setStock}
-                />
-                ;
-              </div>
+              <stockContext.Provider value={stock}>
+                {/* value에 공유하고싶은 값을 넣어준다. */}
+
+                <div className="row product">
+                  <ProductInfo
+                    product={product}
+                    stock={stock}
+                    setStock={setStock}
+                  />
+                </div>
+              </stockContext.Provider>
               {loading && (
                 <div>
                   <h4>로딩중 ...</h4>
