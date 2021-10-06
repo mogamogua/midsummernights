@@ -3,7 +3,7 @@ import { useHistory, useParams } from "react-router-dom";
 import styled from "styled-components";
 import "./Detail.scss";
 import { Nav } from "react-bootstrap";
-import { CSSTransition } from "react-tansition-group";
+import { CSSTransition } from "react-transition-group";
 
 let Box = styled.div`
   padding: 20px;
@@ -18,8 +18,8 @@ let Title = styled.h4`
 function Detail(props) {
   let [display, setDisplay] = useState(true);
   let [inputData, setInputData] = useState("");
-
-  let [onTab, setOnTab] = useState(0);
+  let [tab, setTab] = useState(0);
+  let [pop, setPop] = useState(false);
 
   //useEffect는 여러개 써도됨. 근데 먼저 쓴거 먼저 실행된다.
   useEffect(() => {
@@ -98,41 +98,48 @@ function Detail(props) {
         </div>
       </div>
 
-      <Nav className="mt-5" variant="tabs" defaultActiveKey="/home">
+      <Nav variant="tabs" defaultActiveKey="link-0">
         <Nav.Item>
           <Nav.Link
             eventKey="link-0"
             onClick={() => {
-              setOnTab(0);
+              setTab(0);
+              setPop(false);
             }}
           >
-            Active
+            제품정보
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
           <Nav.Link
             eventKey="link-1"
             onClick={() => {
-              setOnTab(1);
+              setTab(1);
+              setPop(false);
             }}
           >
-            Option 2
+            리뷰
           </Nav.Link>
         </Nav.Item>
       </Nav>
-      {/* 삼항연산자는 경우의수가 3개이상일때는 유용하지 않음. -> 컴포넌트 하나 만들기. */}
-      <TabContent onTab={onTab} />
+      {/* timeout: 몇밀리초세컨드?  in은 스위치 너낌true/false class는 애니메이션 이름*/}
+      <CSSTransition in={pop} className="myAni" timeout={500}>
+        <TabContent tab={tab} setPop={setPop} />
+      </CSSTransition>
     </div>
   );
 }
 
 function TabContent(props) {
-  if (props.onTab === 0) {
-    return <div>0번째 내용임</div>;
-  } else if (props.onTab === 1) {
-    <div>1번째 내용임</div>;
-  } else if (props.onTab === 2) {
-    <div>2번째 내용임</div>;
+  //로드될 때, 탭 변경될 때 switch가 true가 되면서 애니메이션 보여짐
+  useEffect(() => {
+    props.setPop(true);
+  });
+
+  if (props.tab === 0) {
+    return <div className="mt-5">0번째 내용임</div>;
+  } else if (props.tab === 1) {
+    return <div className="mt-5">1번째 내용임</div>;
   }
 }
 

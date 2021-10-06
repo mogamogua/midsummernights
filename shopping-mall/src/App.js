@@ -6,6 +6,7 @@ import ProductInfo from "./ProductInfo";
 import Detail from "./Detail.js";
 import axios from "axios";
 import React from "react";
+import Cart from "./Cart.js";
 
 export let stockContext = React.createContext();
 
@@ -61,7 +62,6 @@ function App() {
             <div className="container">
               <stockContext.Provider value={stock}>
                 {/* value에 공유하고싶은 값을 넣어준다. */}
-
                 <div className="row product">
                   <ProductInfo
                     product={product}
@@ -101,8 +101,15 @@ function App() {
           </div>
         </Route>
         <Route path="/detail/:id">
-          <Detail product={product} stock={stock} setStock={setStock} />
+          <stockContext.Provider value={stock}>
+            <Detail product={product} stock={stock} setStock={setStock} />
+          </stockContext.Provider>
         </Route>
+
+        <Route path="/cart">
+          <Cart></Cart>
+        </Route>
+
         <Route path="/:id">
           <div>새로만든 라우터</div>
         </Route>
