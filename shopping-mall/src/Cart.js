@@ -1,6 +1,6 @@
 import React from "react";
 import { Table } from "react-bootstrap";
-import { connect } from "react-redux";
+import { connect, useSelector, useDispatch } from "react-redux";
 
 function StateToProps(state) {
   return {
@@ -11,6 +11,9 @@ function StateToProps(state) {
 }
 //장바구니 페이지. 표를 넣자
 function Cart(props) {
+  let state = useSelector((state) => state);
+  console.log(state.dataReducer);
+  let dispatch = useDispatch();
   return (
     <div>
       <div>
@@ -25,10 +28,8 @@ function Cart(props) {
             </tr>
           </thead>
           <tbody>
-            {props.data &&
-              props.data.map((state, i) => {
-                console.log(props.data);
-
+            {state.dataReducer &&
+              state.dataReducer.map((state, i) => {
                 return (
                   <tr key={i}>
                     <td>{state.id}</td>
@@ -38,7 +39,7 @@ function Cart(props) {
                     <td>
                       <button
                         onClick={() => {
-                          props.dispatch({ type: "addQuantity", id: state.id });
+                          dispatch({ type: "addQuantity", id: state.id });
                         }}
                       >
                         +
@@ -65,7 +66,7 @@ function Cart(props) {
         {props.isAlert === true ? (
           <div className="my-alert2">
             <p>지금 oioi 3만원 이상 구매하면 신규할인 20%</p>
-            <button onClick={props.dispatch({ type: "close" })}>닫기</button>
+            <button onClick={dispatch({ type: "close" })}>닫기</button>
           </div>
         ) : null}
       </div>

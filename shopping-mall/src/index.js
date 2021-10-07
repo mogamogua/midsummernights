@@ -28,9 +28,16 @@ let defaultData = [
 
 //reducer함수는 항상 state데이터를 뱉어내야한다. 수정될때. 아무일없을 땐 기본state.
 function dataReducer(state = defaultData, action) {
+  //actoin은 dispatch할 때 오는 데이터
   //수정된 state뱉어내기
   let id = action.id;
-  console.log(id);
+
+  if (action.type === "addCart") {
+    let cartData = [...state];
+    console.log(action.payload);
+    cartData.push(action.payload);
+    return cartData;
+  }
   if (action.type === "addQuantity") {
     let changedState = [...state];
     changedState[id].quantity++; // 사본을 만들고 그걸 수정한것.

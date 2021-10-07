@@ -4,6 +4,7 @@ import styled from "styled-components";
 import "./Detail.scss";
 import { Nav } from "react-bootstrap";
 import { CSSTransition } from "react-transition-group";
+import { connect } from "react-redux";
 
 let Box = styled.div`
   padding: 20px;
@@ -74,7 +75,11 @@ function Detail(props) {
             onClick={() => {
               console.log(props.stock[id]);
               props.setStock(Number(props.stock[id] - 1));
-              console.log(props.stock);
+              props.dispatch({
+                type: "addCart",
+                payload: { id: id, name: foundProduct.title, quantity: 1 },
+              });
+              history.push("/cart"); //페이지 강제이동
             }}
           >
             주문하기
@@ -147,4 +152,11 @@ function StockInfo(props) {
   return <p>재고 : {props.stock[props.id]}개</p>;
 }
 
-export default Detail;
+function stateToProps(state) {
+  return {
+    state: state.dataReducer,
+    isAlert: state.alertReducer,
+  };
+}
+
+export default connect(stateToProps)(Detail);
