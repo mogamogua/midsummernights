@@ -21,31 +21,42 @@ function alertReducer(state = alertDefault, action) {
 }
 
 let defaultData = [
-  { id: 0, name: "fancy-shoes", quantity: 12, productHao: 151324 },
-  { id: 1, name: "nike-running-shoes", quantity: 45, productHao: 24784 },
-  { id: 2, name: "adidas-snickers", quantity: 43, productHao: 307814 },
+  { id: 0, name: "SLIT JACKET[BLACK]", quantity: 12, productHao: 151324 },
+  { id: 1, name: "DIAMOND BUSTIER CARDIGAN", quantity: 45, productHao: 24784 },
+  {
+    id: 2,
+    name: "DIAMOND PATTERN KNIT ONEPIECE",
+    quantity: 43,
+    productHao: 307814,
+  },
 ];
 
 //reducer함수는 항상 state데이터를 뱉어내야한다. 수정될때. 아무일없을 땐 기본state.
 function dataReducer(state = defaultData, action) {
-  //actoin은 dispatch할 때 오는 데이터
+  //action은 dispatch할 때 오는 데이터
   //수정된 state뱉어내기
-  let id = action.id;
-
+  let cartData = [...state];
   if (action.type === "addCart") {
-    let cartData = [...state];
-    console.log(action.payload);
-    cartData.push(action.payload);
-    return cartData;
+    let sameId = state.findIndex((a) => {
+      return a.id === action.payload.id;
+    });
+    console.log(sameId);
+    if (sameId >= 0) {
+      cartData[sameId].quantity++;
+    } else {
+      cartData.push(action.payload);
+      return cartData;
+    }
   }
+
   if (action.type === "addQuantity") {
     let changedState = [...state];
-    changedState[id].quantity++; // 사본을 만들고 그걸 수정한것.
+    changedState[action.id].quantity++; // 사본을 만들고 그걸 수정한것.
     return changedState;
   } else if (action.type === "dropQuantity") {
     let changedState = [...state];
-    changedState[id].quantity--;
-    if (changedState[id] <= 0) {
+    changedState[action.id].quantity--;
+    if (changedState[action.id] <= 0) {
       return;
     }
     return changedState;

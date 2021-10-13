@@ -77,7 +77,11 @@ function Detail(props) {
               props.setStock(Number(props.stock[id] - 1));
               props.dispatch({
                 type: "addCart",
-                payload: { id: id, name: foundProduct.title, quantity: 1 },
+                payload: {
+                  id: Number(id),
+                  name: foundProduct.title,
+                  quantity: 1,
+                },
               });
               history.push("/cart"); //페이지 강제이동
             }}
