@@ -1,0 +1,46 @@
+body {
+  background-color: whitesmoke;
+}
+
+#createBio {
+  width: 500px;
+  height: 300px;
+  background-color: rgb(255, 255, 255);
+  border: solid 1px cornflowerblue;
+  border-radius: 10px;
+  display: block;
+  margin: 8rem auto;
+  padding: 1rem;
+  box-shadow: 0 4px 4px 4px rgba(0, 0, 0, 5%);
+}
+
+.inputWrapper {
+  display: flex;
+}
+
+input {
+  cursor: pointer;
+  outline: none;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  border: solid 1px cornflowerblue;
+  border-radius: 4px;
+  color: grey;
+  margin-right: 1rem;
+}
+
+button {
+  background-color: cornflowerblue;
+  color: white;
+  font-weight: 400;
+  font-size: 1rem;
+  border-radius: 4px;
+  outline: none;
+  padding: 8px 12px;
+  box-shadow: 0 4px 4px 4px rgba(0, 0, 0, 5%);
+  border: solid 1px white;
+}
+
+.toggleBtn {
+  margin-top: 1rem;
+}
