@@ -1,4 +1,4 @@
-# 공부 및 토이플젝 모음집
+# React.js / Next.js 연습
 - [x] react 개인 연습
 - [x] 코딩애플 react 연습 및 쇼핑몰 만들기
 - [ ] next.js 연습
