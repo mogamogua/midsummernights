@@ -12,7 +12,6 @@ const ADD = "ADD";
 const MINUS = "MINUS";
 //이렇게 하면 변수명을 잘못썼을 때 Reference Error가 뜬다.
 
-
 const countModifier = (state = 0, action) => {
   //여기서 state를 수정한다.
   //reducer는 state, action을 parameter로 받는다.
@@ -52,4 +51,25 @@ const handleMinus = () => {
 add.addEventListener("click", handleAdd);
 minus.addEventListener("click", handleMinus);
 
-console.log(countStore);
+//todos 기능 만들기
+const form = document.querySelector("form");
+const input = document.querySelector("input");
+const ul = document.querySelector("ul");
+
+//ui만 변경하지 않고 데이터를 저장하고싶다면?
+// const toDos = []; //여기에 todo를 저장해서 data로 사용하는 방법이있다. 
+
+const createToDo = (toDo) => {
+  const li = document.createElement("li");
+  li.innerText = toDo;
+  ul.appendChild(li);
+};
+
+const onSubmit = e => {
+  e.preventDefault();
+  const toDo = input.value;
+  input.value = "";
+  createToDo(toDo);
+};
+
+form.addEventListener("submit", onSubmit);
