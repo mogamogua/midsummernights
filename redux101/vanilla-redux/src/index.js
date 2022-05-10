@@ -65,13 +65,23 @@ const ul = document.querySelector("ul");
 const ADD_TODO = "ADD_TODO";
 const DELETE_TODO = "DELETE_TODO";
 
+//action만을 return하는 함수를 만들어 최적화하기
+const addToDo = (text) => { 
+  return {type: ADD_TODO, text}
+}
+const deleteToDo = (id) => { 
+  return {type: DELETE_TODO, id}
+}
+
 const reducer = (state = [], action) => {
   console.log(action)
   switch (action.type) {
     case ADD_TODO:
       return [{text: action.text, id: Date.now()}, ...state];
     case DELETE_TODO:
-      return [];
+      return state.filter(toDo => toDo.id !==action.id); //해당 id를 제외하고 남긴다.
+      //filter함수는 mutate하지 않는다.
+      //html에서 받아오는 id는 string일 것이므로 parseInt해준다.
     default:
       return state;
   }
@@ -79,14 +89,14 @@ const reducer = (state = [], action) => {
 //never mutate state!!!!
 const store = createStore(reducer);
 
-const addToDo = text => {
-  store.dispatch({type: ADD_TODO, text})
-}
+const dispatchAddToDo = text => {
+  store.dispatch(addToDo(text));
+};
 
-const deleteToDo = (e) => {
-  const id = e.target.parentNode.id; //지울 때 todo의 id 필요
-  store.dispatch({type: DELETE_TODO, id})
-}
+const dispatchDeleteToDo = (e) => {
+  const id = parseInt(e.target.parentNode.id); //지울 때 todo의 id 필요
+  store.dispatch(deleteToDo(id));
+};
 
 const paintToDos = () => {
   const toDos = store.getState();
@@ -95,7 +105,7 @@ const paintToDos = () => {
     const li = document.createElement("li");
     const btn = document.createElement("button");
     btn.innerText = "DEL";
-    btn.addEventListener("click", deleteToDo);
+    btn.addEventListener("click", dispatchDeleteToDo);
     li.id = toDo.id;
     li.innerText = toDo.text;
     li.appendChild(btn);
@@ -111,7 +121,7 @@ const onSubmit = e => {
   const toDo = input.value;
   input.value = "";
   // store.dispatch({type: ADD_TODO, text: toDo});
-  addToDo(toDo);
+  dispatchAddToDo(toDo);
 };
 
 form.addEventListener("submit", onSubmit);
