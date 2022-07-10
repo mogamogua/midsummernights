@@ -24,7 +24,7 @@ function Home({toDos, addToDo}) {
         <input type="text" value={text} onChange={onChange} />
         <button>Add</button>
       </form>
-      <ul>{toDos.map(toDo => <ToDo {...toDo}  id={toDo.id}/>)}</ul>
+      <ul>{toDos.map(toDo => (<ToDo {...toDo} key={toDo.id}/>))}</ul>
     </>
   );
 }

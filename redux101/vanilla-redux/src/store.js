@@ -1,27 +1,17 @@
 import {createStore} from "redux";
+import {configureStore, createAction, createReducer} from "@reduxjs/toolkit";
 
-const ADD = "ADD";
-const DELETE = "DELETE";
+const addToDo = createAction("ADD");
+const deleteToDo = createAction("DELETE");
 
-const addToDo = text => {
-  return {type: ADD, text};
-};
+const reducer = createReducer([], {
+  [addToDo]: (state, action) => {
+    state.push({text: action.payload, id: Date.now});
+  },
+  [deleteToDo]: (state, action) => state.filter(toDo => toDo.id !== action.payload)
+});
 
-const deleteToDo = id => {
-  return {type: DELETE, id};
-};
-
-const reducer = (state, action) => {
-  switch (action.type) {
-    case ADD: 
-      return [{text: action.text, id: Date.now()}, ...state];
-    case DELETE:
-      return state.filter(toDo => toDo !== action.id); //선택한 id를 제외한 것만 리턴하여 보여주도록.
-    default:
-      return state;
-  }
-}
-const store = createStore(reducer); //reducer가 리턴하는 것을 store에 재할당.
+const store = configureStore({reducer}); //reducer가 리턴하는 것을 store에 재할당.
 
 
 export const actionCreators = {
