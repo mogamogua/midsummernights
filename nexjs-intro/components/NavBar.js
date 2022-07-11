@@ -13,20 +13,37 @@ export default function NavBar() {
   return (
     <nav>
       <Link href="/">
-        <a
+        {/* <a
           className={`${styles.link} ${
             router.pathname === "/" ? styles.active : ""
           }`}
         >
           Home
-        </a>
+        </a> */}
+        <a className={router.pathname === "/" ? "active" : ""}>Home</a>
       </Link>
       <Link href="/about">        
-        <a
+        {/* <a
           className={[
             styles.link,
             router.pathname === "/about" ? styles.active : "",
-          ].join(" ")}>About</a>
+          ].join(" ")}>
+          About
+        </a> */}
+        <a className={router.pathname === "/about" ? "active" : ""}>About</a>
       </Link>
+      <style jsx>{`
+      //style jsx로 css 코드삽입 : class이름은 랜덤으로 바뀌어서 중복된 이름도 사용가능.
+      //각 컴포넌트 별로 독립적이다. 
+        nav {
+          background-color: tomato;
+        }
+        a {
+          text-decoration: none;
+        }
+        .active {
+          color: yellow;
+        }
+      `}</style>
     </nav>  )
 }

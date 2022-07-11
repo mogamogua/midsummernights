@@ -4,7 +4,11 @@ export default function Home() {
   return (
     <div>
       <NavBar />
-      여긴 홈
+      <h1>HOME.</h1>
+      <style jsx>{`
+      h1 {
+        color: darkgrey;
+      }`}</style>
     </div>
   )
 }
