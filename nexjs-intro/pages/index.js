@@ -1,4 +1,4 @@
-import NavBar from "../components/NavBar";
+import Seo from "../components/Seo";
 import css from "styled-jsx/css";
 
 export const divStyle = css`
@@ -10,6 +10,7 @@ export const divStyle = css`
 export default function Home() {
   return (
     <>
+    <Seo title="about" />
     <div className="back">
       <h1>HOME.</h1>
     </div>
