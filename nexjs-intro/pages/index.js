@@ -1,6 +1,7 @@
 import Seo from "../components/Seo";
 import css from "styled-jsx/css";
-import { useEffect, useState } from "react";
+import Link from "next/link";
+import {useRouter} from "next/router";
 
 export const divStyle = css`
   .back {
@@ -28,7 +29,6 @@ export const divStyle = css`
   }
 `;
 export default function Home({results}) {
-    const [movies, setMovies] = useState([]);
     // useEffect(() => {
     //   (async () => {
     //     const {results} = await (await fetch(`/api/movies`)).json(); //rewrite하기 전 url로 요청한다
@@ -38,16 +38,48 @@ export default function Home({results}) {
     //data를 받아오는 것은 server쪽에서 한 후 rendering한다.
     //server-side rendering을 통해서 크롤러가 html을 크롤링할 때데이터 영역까지 모두ㅡ 볼 수 있도록.
     //하지만 SSR은 데이터를 받아오기 전까진 화면에 아무것도 안 보이게 된다.
-  return (
-    <div className="container" >
+    const router = useRouter();
+    //onClick 함수는 img를 클릭했을 때만 실행되므로, url입력창에 특정 id를 입력해서 이동하는 경우 title을 받아올 수는 없다.
+    //하지만 원하는 정보를 쉽게 넘겨주고, 사용자에게 가릴 수 있다는 점은 편리함.
+    const onClick = (id, title) => {
+      router.push(
+        //첫 번째 : url객체. query에 정보를 넣어줄 수 있다.
+        {
+          pathname: `/movies/${id}`,
+          query: {
+            title,
+          },
+        },
+        //두 번째: 브라우저에 보여질 url을 적어준다. = 특정 url로 마스킹하는 기능.
+        `/movies/${id}`
+      );
+    }
+  
+    return (
+    <div className="container">
       <Seo title="Home" />
-        {results?.map((movie) => (
-          <div className="movie" key={movie.id}>
-            <img src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} />
-            <h4>{movie.original_title}</h4>
-          </div>
-        ))}
-       <style jsx>{divStyle}</style>
+      {results?.map((movie) => (
+        <div 
+          onClick={() => onClick(movie.id, movie.original_title)} 
+          className="movie" 
+          key={movie.id}>
+          <img src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} />
+          <h4>
+            <Link
+            href={{
+              pathname: `movies/${movie.id}`,
+              query: {
+                title: movie.original_title,
+              },
+            }}
+            as={`/movies/${movie.id}`}
+            >
+            <a>{movie.original_title}</a>
+          </Link>
+        </h4>
+      </div>
+      ))}
+      <style jsx>{divStyle}</style>
     </div>
   )
 }
