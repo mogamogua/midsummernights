@@ -44,15 +44,16 @@ export default function Home({results}) {
     const onClick = (id, title) => {
       router.push(
         //첫 번째 : url객체. query에 정보를 넣어줄 수 있다.
-        {
-          pathname: `/movies/${id}`,
-          query: {
-            title,
-          },
-        },
+        // {
+        //   pathname: `/movies/${id}`,
+        //   query: {
+        //     title,
+        //   },
+        // },
         //두 번째: 브라우저에 보여질 url을 적어준다. = 특정 url로 마스킹하는 기능.
-        `/movies/${id}`
+        `/movies/${title}/${id}`
       );
+      //마스킹 기능 대신, url을 통해 디테일페이지에서 영화정보를 로드할 수 있도록 해보자.
     }
   
     return (
@@ -66,13 +67,14 @@ export default function Home({results}) {
           <img src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} />
           <h4>
             <Link
-            href={{
-              pathname: `movies/${movie.id}`,
-              query: {
-                title: movie.original_title,
-              },
-            }}
-            as={`/movies/${movie.id}`}
+            // href={{
+            //   pathname: `movies/${movie.id}`,
+            //   query: {
+            //     title: movie.original_title,
+            //   },
+            // }}
+            // as={`/movies/${movie.id}`}
+              href={`movies/${movie.original_title}/${movie.id}`}
             >
             <a>{movie.original_title}</a>
           </Link>
