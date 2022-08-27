@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { useLocation, useParams } from 'react-router-dom'
+import { Link, useMatch } from 'react-router-dom'
+import { Outlet, useLocation, useParams } from 'react-router-dom'
+import styled from 'styled-components'
 import { Container, Header, Loader, Title } from './Coins'
 
 interface RoutesState {
@@ -62,13 +64,15 @@ interface PriceData {
 }
 
 function Coin() {
-  const [loading, setLoading] = useState(true)
   const { coinId } = useParams()
   const location = useLocation()
   //Link에서 보내준 state받아오기
   const state = location.state as RoutesState
-  const [info, setInfo] = useState()
-  const [priceInfo, setPriceInfo] = useState()
+  const [loading, setLoading] = useState(true)
+  const [info, setInfo] = useState<InfoData>()
+  const [priceInfo, setPriceInfo] = useState<PriceData>()
+  const priceMatch = useMatch('/:coinId/price')
+  const chartMatch = useMatch('/:coinId/chart')
 
   useEffect(() => {
     ;(async () => {
@@ -83,17 +87,104 @@ function Coin() {
 
       setPriceInfo(priceData)
       setInfo(infoData)
+      setLoading(false)
     })()
-  }, [])
+  }, [coinId])
 
   return (
     <Container>
       <Header>
-        <Title>{state.name || 'loading...'}</Title>
+        <Title>
+          {state?.name ? state.name : loading ? 'loading...' : info?.name}
+        </Title>
       </Header>
-      {loading ? <Loader>Loading...</Loader> : null}
+      {loading ? (
+        <Loader>Loading...</Loader>
+      ) : (
+        <>
+          <Overview>
+            <OverviewItem>
+              <span>Rank:</span>
+              <span>{info?.rank}</span>
+            </OverviewItem>
+            <OverviewItem>
+              <span>Symbol:</span>
+              <span>{info?.symbol}</span>
+            </OverviewItem>
+            <OverviewItem>
+              <span>Open Source:</span>
+              <span>{info?.open_source ? 'Yes' : 'No'}</span>
+            </OverviewItem>
+          </Overview>
+          <Description>{info?.description}</Description>
+          <Overview>
+            <OverviewItem>
+              <span>Total Supply:</span>
+              <span>{priceInfo?.total_supply}</span>
+            </OverviewItem>
+            <OverviewItem>
+              <span>Max Supply:</span>
+              <span>{priceInfo?.max_supply}</span>
+            </OverviewItem>
+          </Overview>
+          <Tabs>
+            <Tab isActive={chartMatch !== null}>
+              <Link to={`/${coinId}/chart`}>Chart</Link>
+            </Tab>
+            <Tab isActive={priceMatch !== null}>
+              <Link to={`/${coinId}/price`}>Price</Link>
+            </Tab>
+          </Tabs>
+          <Outlet />
+        </>
+      )}
     </Container>
   )
 }
 
 export default Coin
+
+const Overview = styled.div`
+  display: flex;
+  justify-content: space-between;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 10px 20px;
+  border-radius: 10px;
+`
+const OverviewItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  span:first-child {
+    font-size: 10px;
+    font-weight: 400;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+`
+const Description = styled.p`
+  margin: 20px 0px;
+  line-height: 1.6;
+`
+
+const Tabs = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  margin: 25px 0px;
+  gap: 10px;
+`
+
+const Tab = styled.span<{ isActive: boolean }>`
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 400;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 7px 0px;
+  border-radius: 10px;
+  color: ${(props) =>
+    props.isActive ? props.theme.accentColor : props.theme.textColor};
+  a {
+    display: block;
+  }
+`

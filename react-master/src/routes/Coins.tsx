@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import { useQuery } from 'react-query'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
+import { fetchCoins } from '../api'
 
-interface CoinInterface {
+interface ICoin {
   id: string
   name: string
   symbol: string
@@ -12,28 +13,27 @@ interface CoinInterface {
   type: string
 }
 function Coins() {
-  const [coins, setCoins] = useState<CoinInterface[]>([])
-  const [loading, setLoading] = useState(true)
+  // useEffect(() => {
+  //   //첫 렌더링시에만 실행되도록.
+  //   ;(async () => {
+  //     const response = await fetch('https://api.coinpaprika.com/v1/coins')
+  //     const json = await response.json()
+  //     setCoins(json.slice(0, 100))
+  //     setLoading(false)
+  //   })() // 즉시실행함수를 만들어서 오직 첫 렌더링에만 실행되도록한다.
+  // }, [])
 
-  useEffect(() => {
-    //첫 렌더링시에만 실행되도록.
-    ;(async () => {
-      const response = await fetch('https://api.coinpaprika.com/v1/coins')
-      const json = await response.json()
-      setCoins(json.slice(0, 100))
-      setLoading(false)
-    })() // 즉시실행함수를 만들어서 오직 첫 렌더링에만 실행되도록한다.
-  }, [])
+  const { isLoading, data } = useQuery<ICoin[]>('allCoins', fetchCoins)
   return (
     <Container>
       <Header>
         <Title>코인</Title>
       </Header>
-      {loading ? (
+      {isLoading ? (
         <Loader>Loading . . .</Loader>
       ) : (
         <CoinsList>
-          {coins.map((coin) => (
+          {data?.slice(0, 100).map((coin) => (
             <Coin key={coin.id}>
               <Link to={`/${coin.id}`} state={{ name: coin.name }}>
                 <Img
