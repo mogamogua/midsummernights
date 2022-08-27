@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react'
+import { useQueries, useQuery } from 'react-query'
 import { Link, useMatch } from 'react-router-dom'
 import { Outlet, useLocation, useParams } from 'react-router-dom'
 import styled from 'styled-components'
+import { fetchCoinInfo, fetchCoinTickers } from '../api'
 import { Container, Header, Loader, Title } from './Coins'
 
 interface RoutesState {
@@ -64,38 +66,51 @@ interface PriceData {
 }
 
 function Coin() {
-  const { coinId } = useParams()
+  const params = useParams()
+  const coinId = params.coinId || ''
   const location = useLocation()
   //Link에서 보내준 state받아오기
   const state = location.state as RoutesState
-  const [loading, setLoading] = useState(true)
-  const [info, setInfo] = useState<InfoData>()
-  const [priceInfo, setPriceInfo] = useState<PriceData>()
+  // const [loading, setLoading] = useState(true)
+  // const [info, setInfo] = useState<InfoData>()
+  // const [priceInfo, setPriceInfo] = useState<PriceData>()
   const priceMatch = useMatch('/:coinId/price')
   const chartMatch = useMatch('/:coinId/chart')
 
-  useEffect(() => {
-    ;(async () => {
-      const infoData = await (
-        await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)
-      ).json()
-      console.log(infoData)
-      const priceData = await (
-        await fetch(`https://api.coinpaprika.com/v1/tickers/${coinId}`)
-      ).json()
-      console.log(priceData)
+  // useEffect(() => {
+  //   ;(async () => {
+  //     const infoData = await (
+  //       await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)
+  //     ).json()
+  //     console.log(infoData)
+  //     const priceData = await (
+  //       await fetch(`https://api.coinpaprika.com/v1/tickers/${coinId}`)
+  //     ).json()
+  //     console.log(priceData)
 
-      setPriceInfo(priceData)
-      setInfo(infoData)
-      setLoading(false)
-    })()
-  }, [coinId])
+  //     setPriceInfo(priceData)
+  //     setInfo(infoData)
+  //     setLoading(false)
+  //   })()
+  // }, [coinId])
 
+  //구조분해할당하면서 변수이름 바꾸기
+  const { isLoading: infoLoading, data: infoData } = useQuery<InfoData>(
+    ['info', coinId],
+    () => fetchCoinInfo(coinId),
+  )
+  const { isLoading: tickersLoading, data: tickersData } = useQuery<PriceData>(
+    ['tickers', coinId],
+    () => fetchCoinTickers(coinId),
+  )
+  const loading = infoLoading || tickersLoading //둘 중 하나라도 로딩있으면 로딩에 담김다
+  //react-query로 바꾸면서 매 이동시마다 api요청하지 않고 캐싱된 데이터 사용
+  //이 캐싱된 데이터가 주기적으로 바뀌어야한다면 리프레시되는 시간간격 설정가능.
   return (
     <Container>
       <Header>
         <Title>
-          {state?.name ? state.name : loading ? 'loading...' : info?.name}
+          {state?.name ? state.name : loading ? 'loading...' : infoData?.name}
         </Title>
       </Header>
       {loading ? (
@@ -105,26 +120,26 @@ function Coin() {
           <Overview>
             <OverviewItem>
               <span>Rank:</span>
-              <span>{info?.rank}</span>
+              <span>{infoData?.rank}</span>
             </OverviewItem>
             <OverviewItem>
               <span>Symbol:</span>
-              <span>{info?.symbol}</span>
+              <span>{infoData?.symbol}</span>
             </OverviewItem>
             <OverviewItem>
               <span>Open Source:</span>
-              <span>{info?.open_source ? 'Yes' : 'No'}</span>
+              <span>{infoData?.open_source ? 'Yes' : 'No'}</span>
             </OverviewItem>
           </Overview>
-          <Description>{info?.description}</Description>
+          <Description>{infoData?.description}</Description>
           <Overview>
             <OverviewItem>
               <span>Total Supply:</span>
-              <span>{priceInfo?.total_supply}</span>
+              <span>{tickersData?.total_supply}</span>
             </OverviewItem>
             <OverviewItem>
               <span>Max Supply:</span>
-              <span>{priceInfo?.max_supply}</span>
+              <span>{tickersData?.max_supply}</span>
             </OverviewItem>
           </Overview>
           <Tabs>
